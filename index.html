@@ -12,30 +12,30 @@
 <body>
     <div class="main">
         <h1 class="title">Rock Paper Scissors</h1>
-        <div class="dropdown">
-            <button class="dropbtn">>Rules</button>
-            <div class="dropdown-content">
-            <p>The rules here</p>
-            </div>
-          </div>
+        <details>
+            <summary>Rules</summary>
+            <p>Rules go here and make them look nice and center them</p>
+        </details>
+        <!--  <button type="button" id="start">Start</button>-->
         <div class="grid-main">
             <div class="player grid">
                 <button class="options" id="Rock"><img src="./img/rock.png"></button>
                 <button class="options" id="Paper"><img src="./img/paper.png"></button>
                 <button class="options" id="Scissors"><img src="./img/scissors.png"></button>
             </div>
-            <div class="game grid">
-                <h3 id="timer"></h3>
-                <h3 id="result"></h3>
+            <div class="grid">
+                <div class="game"><button type="button" id="start">Start</button><p id="timer"></p></div>
+                <h3 class="game" id="result"></h3>
+                <h3 class="game" id="score"></h3>
             </div>
             <div class="computer grid">
-                <button class="bot_option" id="Rock"><img src="./img/rock.png"></button>
-                <button class="bot_option" id="Paper"><img src="./img/paper.png"></button>
-                <button class="bot_option" id="Scissors"><img src="./img/scissors.png"></button>
+                <button class="bot_option" id="cRock"><img src="./img/rock.png"></button>
+                <button class="bot_option" id="cPaper"><img src="./img/paper.png"></button>
+                <button class="bot_option" id="cScissors"><img src="./img/scissors.png"></button>
             </div>
         </div>
     </div>
+    <script src="main.js"></script>
 </body>
-<script src="main.js"></script>
 
 </html>
