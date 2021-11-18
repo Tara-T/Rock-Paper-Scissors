@@ -1,112 +1,113 @@
 let bot = 0;
 let player = 0;
-let timeLeft = 3;
+let timeLeft = 4;
 let timer;
 let pInput;
 let cInput;
 const options = document.querySelectorAll(".options")
-const botOptions = document.querySelectorAll('.bot-option')
-let score = document.getElementById("score");
-let startBtn = document.getElementById("start");
-let time = document.getElementById("timer");
-let result = document.getElementById("result");
+const startBtn = document.getElementById("start");
+const time = document.getElementById("timer");
 
-function pick() { //this needs a better name
-    options.forEach((option) => {
-        option.addEventListener("click", function () {
-            pInput = this.getAttribute("id");
+function click() {
+    pInput = this.getAttribute("id");
 
-            this.style.border = "black 1px solid"; //TODO: change this so other elements dissapear
+    this.style.border = "black 1px solid"; //TODO: change this so other elements dissapear
 
-            const cOptions = ["Rock", "Paper", "Scissors"];
-            cInput = cOptions[Math.floor(Math.random() * 3)];
+    const cOptions = ["Rock", "Paper", "Scissors"];
+    cInput = cOptions[Math.floor(Math.random() * 3)];
 
-            border(cInput)
+    border(cInput)
 
-            clearInterval(timer)
+    clearInterval(timer)
 
-            checkTime();
-            console.log(timeLeft)
+    checkTime();
 
+    const score = document.getElementById("score");
+    score.innerHTML = `${player} vs ${bot}`;
 
-            score.innerHTML = `${player} vs ${bot}`;
+    console.log(pInput, cInput);
+    console.log(player, bot);
 
-            console.log(pInput, cInput);
-            console.log(player, bot);
+};
 
-        });
+function pick() {
+    return new Promise((res) => {
+        options.forEach((option) => {
+            option.addEventListener("click", function () { click.call(this); res(); })
+        })
     })
-};
-
-function border(cInput) { //making a full finction just to put a border >:(
-
-    switch (cInput) {
-        case "Rock":
-            document.getElementById("cRock").style.border = "solid 1px black"
-            break;
-        case "Paper":
-            document.getElementById("cPaper").style.border = "solid 1px black"
-            break;
-        case "Scissors":
-            document.getElementById("cScissors").style.border = "solid 1px black"
-            break;
-    }
-};
-
-
-function compareImp(pInput, cInput) {
-
-    if (pInput === cInput) {
-        result.innerHTML = "It's a tie";
-    }
-
-    if (pInput === "Rock" && cInput === "Scissors" || pInput === "Scissors" && cInput === "Paper" || pInput === "Paper" && cInput === "Rock") {
-        result.innerHTML = "You win";
-        player++;
-    }
-    else if (pInput === "Scissors" && cInput === "Rock" || pInput === "Paper" && cInput === "Scissors" || pInput === "Rock" && cInput === "Paper") {
-        result.innerHTML = "You lose";
-        bot++;
-    }
 }
 
-function getTime() {
-    timer = setInterval(function () {
-        if (timeLeft <= 0) {
-            clearInterval(timer);
+
+    function border(cInput) { //making a full finction just to put a border >:(
+
+        switch (cInput) {
+            case "Rock":
+                document.getElementById("cRock").style.border = "solid 1px black"
+                break;
+            case "Paper":
+                document.getElementById("cPaper").style.border = "solid 1px black"
+                break;
+            case "Scissors":
+                document.getElementById("cScissors").style.border = "solid 1px black"
+                break;
         }
-        time.innerHTML = timeLeft;
-        timeLeft -= 1;
-    }, 1000);
-}
+    };
 
-function checkTime() {
-    switch (timeLeft) {
-        case 0:
+
+    function compareImp(pInput, cInput) {
+
+        if (pInput === cInput) {
+            result.innerHTML = "It's a tie";
+        }
+
+        if (pInput === "Rock" && cInput === "Scissors" || pInput === "Scissors" && cInput === "Paper" || pInput === "Paper" && cInput === "Rock") {
+            result.innerHTML = "You win";
+            player++;
+        }
+        else if (pInput === "Scissors" && cInput === "Rock" || pInput === "Paper" && cInput === "Scissors" || pInput === "Rock" && cInput === "Paper") {
+            result.innerHTML = "You lose";
             bot++;
-            result.innerHTML = "Too late"
-            break;
-        case 1:
-            console.log("case 1")
-            compareImp(pInput, cInput)
-            
-            break;
-        case 2:
-        case 3:
-            bot++;
-            result.innerHTML = "Too early"
-            break;
+        }
     }
-}
 
-function game() {
-    // while (bot != 3 && player != 3) maybe a for loop is better 
-    startBtn.style.display = 'none';
-    time.style.display = 'block';
-    getTime(); //TODO fix delay 
-    pick();
+    function getTime() {
+        timer = setInterval(function () {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+            }
+            timeLeft -= 1;
+            time.innerHTML = timeLeft;
+        }, 1000);
+    }
 
+    function checkTime() {
+        let result = document.getElementById("result");
+        switch (timeLeft) {
+            case 0:
+                bot++;
+                result.innerHTML = "Too late"
+                break;
+            case 1:
+                compareImp(pInput, cInput)
+                break;
+            case 2:
+            case 3:
+                bot++;
+                result.innerHTML = "Too early"
+                break;
+        }
+    }
 
-}
+    async function game() {
+        startBtn.style.display = 'none';
+        time.style.display = 'block';
 
-startBtn.addEventListener('click', game);
+        for (let i = 0; i < 3; i++) {
+            timeLeft = 4;
+            getTime(); //TODO fix delay 
+            await pick()
+        };
+    }
+
+    startBtn.addEventListener('click', game);
